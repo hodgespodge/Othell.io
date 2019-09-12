@@ -29,12 +29,12 @@ class Gameboard:
         return x >= 0 and x <= 7 and y >= 0 and y <= 7
 
     #If the move is valid, return the tiles that would be flipped
-    def valid_move(self,player,tile,x,y):
+    def valid_move(self,player,x,y):
 
         all_tiles_flipped = []
 
         #Is the space already occupied? Is the space on the board?
-        if tile != '_' or not self._on_board(x,y):
+        if self.board[x][y] != '_' or not self._on_board(x,y):
             return all_tiles_flipped
 
         #Check every adjacent space
@@ -71,7 +71,7 @@ class Gameboard:
                 if self.board[adjacent_x][adjacent_y] == player: #If the straight line search found a tile owned by player
 
                     #the flipped tiles are added to the list but more directions must be checked for flipped tiles
-                    all_tiles_flipped.append(tiles_flipped_in_direction)
+                    all_tiles_flipped.extend(tiles_flipped_in_direction)
                     break
 
                 adjacent_x += x_direc
@@ -86,17 +86,20 @@ class Gameboard:
         moves = []
 
         for tile in it:
-            #print(it.multi_index)
+
+            if tile != '_':
+                continue
 
             x,y = it.multi_index[0],it.multi_index[1]
 
-            changed_tiles = self.valid_move(player,tile,x,y)
+            changed_tiles = self.valid_move(player,x,y)
 
             if len(changed_tiles) > 0:
                 moves.append((x,y,len(changed_tiles)))
 
         return moves
 
+    #calculate and return the scores of each player as a dictionary
     def scores(self):
         score = {}
         b,w = 0,0
@@ -111,7 +114,28 @@ class Gameboard:
         score['b'],score['w'] = b,w
         return score
 
+    def _flip_tiles(self,player,changed_tiles):
+        print(changed_tiles)
+        for tile in changed_tiles:
+
+            self.board[tile[0]][tile[1]] = player
+
+
+    def place_tile(self, player, x, y):
+        changed_tiles = self.valid_move(player,x,y)
+
+        if len(changed_tiles) < 0:
+            print("ERROR: INVALID PLAY")
+            return False
+
+        self._flip_tiles(player,changed_tiles)
+        self.board[x][y] = player
+        return True
+
+
 def main():
+
+    #custom board for testing purposes...
 
     custom_board = np.full(shape=(8, 8),fill_value= '_',dtype = str)
 
@@ -136,6 +160,10 @@ def main():
     othello_board.display_board()
 
     print(othello_board.available_moves('b'))
+    print(othello_board.scores())
+
+    othello_board.place_tile('b', 3, 5)
+    othello_board.display_board()
     print(othello_board.scores())
 
 if __name__ == "__main__":
