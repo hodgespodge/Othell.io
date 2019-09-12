@@ -1,19 +1,20 @@
+#Othello Code created by Samuel Hodges
+#Gameboard class deals only with simulating the game.
+
 import numpy as np
 
 class Gameboard:
-
-    #https://inventwithpython.com/chapter15.html
 
     def __init__(self,start_board = None):
 
         if start_board is None:
             self.board = np.full(shape=(8, 8),fill_value= '_',dtype = str)
 
-            self.board[3][4] = 'b'
-            self.board[4][3] = 'b'
+            self.board[3][4] = 'B'
+            self.board[4][3] = 'B'
 
-            self.board[3][3] = 'w'
-            self.board[4][4] = 'w'
+            self.board[3][3] = 'W'
+            self.board[4][4] = 'W'
         else:
             self.board = start_board
 
@@ -25,6 +26,7 @@ class Gameboard:
                 print(self.board[x][y],"|",end='',sep = '')
             print("")
 
+    #Does the square exist on the board?
     def _on_board(self,x,y):
         return x >= 0 and x <= 7 and y >= 0 and y <= 7
 
@@ -80,6 +82,8 @@ class Gameboard:
         return all_tiles_flipped
 
     #check all tiles for valid moves
+    #returns a list of tuples containing the x and y of available moves
+    # and the number of tiles flipped for each move
     def available_moves(self,player):
         it = np.nditer(self.board, op_flags=['readwrite'], flags=['multi_index'])
 
@@ -102,24 +106,22 @@ class Gameboard:
     #calculate and return the scores of each player as a dictionary
     def scores(self):
         score = {}
-        b,w = 0,0
+        B,W = 0,0
         for tile in np.nditer(self.board):
             if tile == '_':
                 continue
-            if tile == 'b':
-                b += 1
+            if tile == 'B':
+                B += 1
             else:
-                w += 1
+                W += 1
 
-        score['b'],score['w'] = b,w
+        score['B'],score['W'] = B,W
         return score
 
     def _flip_tiles(self,player,changed_tiles):
-        print(changed_tiles)
         for tile in changed_tiles:
 
             self.board[tile[0]][tile[1]] = player
-
 
     def place_tile(self, player, x, y):
         changed_tiles = self.valid_move(player,x,y)
@@ -131,40 +133,3 @@ class Gameboard:
         self._flip_tiles(player,changed_tiles)
         self.board[x][y] = player
         return True
-
-
-def main():
-
-    #custom board for testing purposes...
-
-    custom_board = np.full(shape=(8, 8),fill_value= '_',dtype = str)
-
-    custom_board[1][5] = 'b'
-
-    custom_board[2][2] = 'w'
-    custom_board[2][3] = 'w'
-    custom_board[2][4] = 'w'
-    custom_board[2][5] = 'w'
-
-    custom_board[3][2] = 'b'
-    custom_board[3][3] = 'b'
-    custom_board[3][4] = 'w'
-
-    custom_board[4][3] = 'b'
-    custom_board[4][4] = 'w'
-
-
-
-    othello_board = Gameboard(custom_board)
-
-    othello_board.display_board()
-
-    print(othello_board.available_moves('b'))
-    print(othello_board.scores())
-
-    othello_board.place_tile('b', 3, 5)
-    othello_board.display_board()
-    print(othello_board.scores())
-
-if __name__ == "__main__":
-    main()
