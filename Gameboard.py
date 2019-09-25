@@ -26,6 +26,15 @@ class Gameboard:
                 print(self.board[x][y],"|",end='',sep = '')
             print("")
 
+    def board_not_full(self):
+        it = np.nditer(self.board, op_flags=['readwrite'], flags=['multi_index'])
+
+        for tile in it:
+            if tile != '_':
+                return True
+        else:
+            return False
+
     #Does the square exist on the board?
     def _on_board(self,x,y):
         return x >= 0 and x <= 7 and y >= 0 and y <= 7
