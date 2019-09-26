@@ -1,13 +1,10 @@
 from Gameboard import *
 
-class GreedyAI:
+class GreedyAi:
 
-    def __init__(self, color):
-        self.color = color
+    def play_turn(self,board,color):
 
-    def play_turn(self,board):
-
-        possible_moves = board.available_moves(player=self.color)
+        possible_moves = board.available_moves(player=color)
 
         if len(possible_moves) > 0:
             greedy_move = max(possible_moves,key=lambda item:item[2])
