@@ -72,7 +72,7 @@ def main(debug = False):
     line = input().split()
     ai_color = line[1]
 
-    Ai = GreedyAi()
+    Ai = QualityAi()
 
     print("R",ai_color)
 

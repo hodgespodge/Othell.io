@@ -47,8 +47,8 @@ def main(debug=False):
     ai_1_color = 'B'
     ai_2_color = 'W'
 
-    ai_1 = GreedyAi()
-    ai_2 = QualityAi()
+    ai_2 = GreedyAi()
+    ai_1 = QualityAi()
 
     print("R", ai_1_color)
     print("R", ai_2_color)

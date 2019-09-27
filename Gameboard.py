@@ -5,20 +5,17 @@ import numpy as np
 
 class Gameboard:
 
-    def __init__(self,start_board = None):
+    def __init__(self):
+
+        self.board = np.full(shape=(8, 8),fill_value= '_',dtype = str)
+
+        self.board[3][4] = 'B'
+        self.board[4][3] = 'B'
+
+        self.board[3][3] = 'W'
+        self.board[4][4] = 'W'
 
         self.tiles_on_board = 0
-
-        if start_board is None:
-            self.board = np.full(shape=(8, 8),fill_value= '_',dtype = str)
-
-            self.board[3][4] = 'B'
-            self.board[4][3] = 'B'
-
-            self.board[3][3] = 'W'
-            self.board[4][4] = 'W'
-        else:
-            self.board = start_board
 
     def display_board(self):
         print("  A B C D E F G H")

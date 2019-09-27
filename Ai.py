@@ -1,4 +1,5 @@
 from Gameboard import *
+import copy
 
 class GreedyAi():
 
@@ -15,18 +16,39 @@ class GreedyAi():
 class QualityAi():
 
     def quality_of_move(self,board,color,move):
+        other_color = {'W': 'B', 'B': 'W'}
+
         corners = [(0, 0), (7, 0), (0, 7), (7, 7)]
-        corner_buffers = [(1, 0), (0, 1), (1, 1), (6, 0), (7, 1), (6, 1), (0, 6), (1, 7), (1, 6), (6, 7), (7, 6),
-                          (6, 6)]
 
-        if (move[0], move[1]) in corners:  # in corner is best move
+        tl_corner_buffer = [(1, 0), (0, 1), (1, 1)]
+        tr_corner_buffer = [(6, 0), (7, 1), (6, 1)]
+        bl_corner_buffer = [(0, 6), (1, 7), (1, 6)]
+        br_corner_buffer = [(6, 7), (7, 6), (6, 6)]
+
+
+        quality = 0
+
+        if (move[0], move[1]) in corners:  # in corner is the best move
             return 10
-        #     best_move = move[0], move[1]
-        #     break
-        #
-        # elif (move[0], move[1]) in corner_buffers:  # bad move
+        elif (move[0], move[1]) in tl_corner_buffer and board.board[0][0] == '_': #this would give the enemy the corner
+            quality -= 10
+        elif (move[0], move[1]) in tr_corner_buffer and board.board[7][0] == '_': #this would give the enemy the corner
+            quality -= 10
+        elif (move[0], move[1]) in bl_corner_buffer and board.board[0][7] == '_': #this would give the enemy the corner
+            quality -= 10
+        elif (move[0], move[1]) in br_corner_buffer and board.board[7][7] == '_': #this would give the enemy the corner
+            quality -= 10
 
-        return -1
+        # In order to view state of board after move, board must be simulated
+        resulting_board = copy.deepcopy(board)
+        resulting_board.place_tile(color,move[0],move[1])
+
+        resulting_ai_moves = resulting_board.available_moves(player=color)
+        resulting_enemy_moves = resulting_board.available_moves(player=other_color[color])
+        quality -= len(resulting_enemy_moves)   #the more moves the enemy has available the worse the play
+        quality += len(resulting_ai_moves)      #the more moves the ai has available the better the play
+
+        return quality
 
 
     def play_turn(self,board,color):
