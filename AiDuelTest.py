@@ -1,5 +1,5 @@
 from Gameboard import *
-from GreedyAI import *
+from Ai import *
 import numpy as np
 
 xmap = {'a': 0, 'b': 1, 'c': 2, 'd': 3, 'e': 4, 'f': 5, 'g': 6, 'h': 7, 0: 'a', 1: 'b', 2: 'c', 3: 'd', 4: 'e',
@@ -48,7 +48,7 @@ def main(debug=False):
     ai_2_color = 'W'
 
     ai_1 = GreedyAi()
-    ai_2 = GreedyAi()
+    ai_2 = QualityAi()
 
     print("R", ai_1_color)
     print("R", ai_2_color)

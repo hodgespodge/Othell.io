@@ -7,6 +7,8 @@ class Gameboard:
 
     def __init__(self,start_board = None):
 
+        self.tiles_on_board = 0
+
         if start_board is None:
             self.board = np.full(shape=(8, 8),fill_value= '_',dtype = str)
 
@@ -27,11 +29,9 @@ class Gameboard:
             print("")
 
     def board_not_full(self):
-        it = np.nditer(self.board, op_flags=['readwrite'], flags=['multi_index'])
 
-        for tile in it:
-            if tile != '_':
-                return True
+        if self.tiles_on_board < 64:
+            return True
         else:
             return False
 
@@ -108,7 +108,7 @@ class Gameboard:
             changed_tiles = self.valid_move(player,x,y)
 
             if len(changed_tiles) > 0:
-                moves.append((x,y,len(changed_tiles)))
+                moves.append((x,y,changed_tiles))
 
         return moves
 
@@ -141,4 +141,6 @@ class Gameboard:
 
         self._flip_tiles(player,changed_tiles)
         self.board[x][y] = player
+        self.tiles_on_board += 1
+
         return True
