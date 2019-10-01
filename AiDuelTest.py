@@ -11,58 +11,65 @@ other_color = {'W': 'B', 'B': 'W'}
 # if the next player also cant play, the game is over.
 dead_lock = False
 
-def ai_turn(othello_board, color, Ai):
+def ai_turn(board, color, Ai):
     global dead_lock
 
-    if othello_board.board_not_full():
+    if board.board_not_full():
 
-        Ai_move = Ai.play_turn(othello_board, color)
+        Ai_move = Ai.play_turn(board = board, color =color)
 
         if Ai_move is not None:
             print(color, xmap[Ai_move[0]], Ai_move[1] + 1)
             dead_lock = False
-            othello_board.place_tile(color, Ai_move[0], Ai_move[1])
-            return othello_board
+            board.place_tile(color, Ai_move[0], Ai_move[1])
+            return board
 
         elif dead_lock == True:  # if there are no available moves and other player also had no available moves
-            print(othello_board.scores()['B'])
-            exit()
+            print(board.scores()['B'])
+            return
 
         else:
             # no available moves... skipping turn
             print(color)
             dead_lock = True
-            return othello_board
+            return board
     else:
         # AI claiming game over. Printing score of black.
-        print(othello_board.scores()['B'])
-        exit()
+        print(board.scores()['B'])
+        return
 
-def main(debug=False):
+def run_ai_duel(debug=False,black_player = GreedyAi,white_player = GreedyAi):
 
-    othello_board = Gameboard()
+    results = {'turn':[0],'Black':[2],'White':[2]}
+
+    board = Gameboard()
     if debug:
-        othello_board.display_board()
+        board.display_board()
 
-    ai_1_color = 'B'
-    ai_2_color = 'W'
+    print("R B")
+    print("R W")
 
-    ai_2 = GreedyAi()
-    ai_1 = QualityAi()
-
-    print("R", ai_1_color)
-    print("R", ai_2_color)
-
+    turn = 1
     while (True):
 
         if debug:
-            othello_board.display_board()
+            board.display_board()
 
         # Ai goes first
-        othello_board = ai_turn(othello_board, ai_1_color, ai_1)
+        board = ai_turn(board = board, color = 'B', Ai = black_player)
         if debug:
-            othello_board.display_board()
-        othello_board = ai_turn(othello_board,ai_2_color, ai_2)
+            board.display_board()
+        if board == None:
+            break
+        board = ai_turn(board = board,color = 'W', Ai = white_player)
+        if board == None:
+            break
 
-if __name__ == "__main__":
-    main(debug=True)
+
+        results['turn'].append(turn)
+        results['Black'].append(board.scores()['B'])
+        results['White'].append(board.scores()['W'])
+
+        turn += 1
+
+    return results

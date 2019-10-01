@@ -1,5 +1,6 @@
 from Gameboard import *
 import copy
+import random
 
 class GreedyAi():
 
@@ -29,7 +30,7 @@ class QualityAi():
         quality = 0
 
         if (move[0], move[1]) in corners:  # in corner is the best move
-            return 10
+            quality += 10
         elif (move[0], move[1]) in tl_corner_buffer and board.board[0][0] == '_': #this would give the enemy the corner
             quality -= 10
         elif (move[0], move[1]) in tr_corner_buffer and board.board[7][0] == '_': #this would give the enemy the corner
@@ -41,6 +42,7 @@ class QualityAi():
 
         # In order to view state of board after move, board must be simulated
         resulting_board = copy.deepcopy(board)
+
         resulting_board.place_tile(color,move[0],move[1])
 
         resulting_ai_moves = resulting_board.available_moves(player=color)
@@ -67,6 +69,31 @@ class QualityAi():
 
 
             return best_move[0][0],best_move[0][1]
+
+        else:
+            return None
+
+class RandomGreedyAi():
+
+    def play_turn(self,board,color):
+        possible_moves = board.available_moves(player=color)
+
+        if len(possible_moves) > 0:
+
+            greediest_moves = [possible_moves[0]] #Greediest moves are all the moves tied for flipping the most tiles
+            for move in possible_moves:
+
+                if len(move[2]) > len(greediest_moves[0][2]):
+                    greediest_moves = [move]
+
+                elif len(move[2]) == len(greediest_moves[0][2]):
+                    greediest_moves.append(move)
+
+            greedy_move = random.choice(greediest_moves)
+
+            return greedy_move[0], greedy_move[1]
+
+
 
         else:
             return None
