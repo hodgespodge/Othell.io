@@ -61,6 +61,13 @@ def run_ai_duel(debug=False,black_player = GreedyAi,white_player = GreedyAi):
             board.display_board()
         if board == None:
             break
+
+        results['turn'].append(turn)
+        results['Black'].append(board.scores()['B'])
+        results['White'].append(board.scores()['W'])
+
+        turn += 1
+
         board = ai_turn(board = board,color = 'W', Ai = white_player)
         if board == None:
             break
