@@ -75,6 +75,8 @@ def main(debug = False):
     Ai = QualityAi()
 
     print("R",ai_color)
+    if input() != "R "+other_color[ai_color]:
+        exit()
 
     while(True):
 
