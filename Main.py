@@ -36,12 +36,12 @@ def opponents_turn(othello_board,color):
     elif line[0].isdigit():
         exit()
 
-def ai_turn(othello_board,color,Ai):
+def ai_turn(othello_board,color,Ai,turn):
     global dead_lock
 
     if othello_board.board_not_full():
 
-        Ai_move = Ai.play_turn(othello_board,color)
+        Ai_move = Ai.play_turn(othello_board,color,turn)
 
         if Ai_move is not None:
             print(color, xmap[Ai_move[0]], Ai_move[1] + 1)
@@ -78,6 +78,7 @@ def main(debug = False):
     if input() != "R "+other_color[ai_color]:
         exit()
 
+    turn = 1
     while(True):
 
         if debug:
@@ -85,17 +86,21 @@ def main(debug = False):
 
         #Ai goes first
         if ai_color == 'B':
-            othello_board = ai_turn(othello_board,ai_color,Ai)
+            othello_board = ai_turn(othello_board,ai_color,Ai,turn)
+            turn += 1
             if debug:
                 othello_board.display_board()
             othello_board = opponents_turn(othello_board, other_color[ai_color])
+            turn += 1
 
         #opponent goes first
         else:
             othello_board = opponents_turn(othello_board, other_color[ai_color])
+            turn += 1
             if debug:
                 othello_board.display_board()
-            othello_board = ai_turn(othello_board,ai_color,Ai)
+            othello_board = ai_turn(othello_board,ai_color,Ai,turn)
+            turn += 1
 
 if __name__ == "__main__":
     main(debug=True)

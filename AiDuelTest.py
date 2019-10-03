@@ -11,12 +11,12 @@ other_color = {'W': 'B', 'B': 'W'}
 # if the next player also cant play, the game is over.
 dead_lock = False
 
-def ai_turn(board, color, Ai):
+def ai_turn(board, color, Ai,turn):
     global dead_lock
 
     if board.board_not_full():
 
-        Ai_move = Ai.play_turn(board = board, color =color)
+        Ai_move = Ai.play_turn(board = board, color =color,turn = turn)
 
         if Ai_move is not None:
             print(color, xmap[Ai_move[0]], Ai_move[1] + 1)
@@ -56,7 +56,7 @@ def run_ai_duel(debug=False,black_player = GreedyAi,white_player = GreedyAi):
             board.display_board()
 
         # Ai goes first
-        board = ai_turn(board = board, color = 'B', Ai = black_player)
+        board = ai_turn(board = board, color = 'B', Ai = black_player,turn = turn)
         if debug:
             board.display_board()
         if board == None:
@@ -68,7 +68,7 @@ def run_ai_duel(debug=False,black_player = GreedyAi,white_player = GreedyAi):
 
         turn += 1
 
-        board = ai_turn(board = board,color = 'W', Ai = white_player)
+        board = ai_turn(board = board,color = 'W', Ai = white_player,turn = turn)
         if board == None:
             break
 
